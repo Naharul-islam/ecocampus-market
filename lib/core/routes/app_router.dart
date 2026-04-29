@@ -14,6 +14,7 @@ import '../../features/profile/profile_screen.dart';
 import '../../features/eco/leaderboard_screen.dart';
 import '../../features/wishlist/wishlist_screen.dart';
 import '../../features/map/meetup_map_screen.dart';
+import '../../features/admin/seed_data_screen.dart';
 
 class AppRouter {
   static const splash = '/';
@@ -31,6 +32,7 @@ class AppRouter {
   static const leaderboard = '/leaderboard';
   static const wishlist = '/wishlist';
   static const meetupMap = '/meetup-map';
+  static const seedData = '/seed-data';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -46,12 +48,14 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AddProductScreen());
       case productDetail:
         final args = settings.arguments as Map<String, dynamic>?;
-        return MaterialPageRoute(builder: (_) => ProductDetailScreen(productData: args ?? {}));
+        return MaterialPageRoute(
+            builder: (_) => ProductDetailScreen(productData: args ?? {}));
       case myListings:
         return MaterialPageRoute(builder: (_) => const MyListingsScreen());
       case chat:
         final args = settings.arguments as Map<String, dynamic>?;
-        return MaterialPageRoute(builder: (_) => ChatScreen(chatData: args ?? {}));
+        return MaterialPageRoute(
+            builder: (_) => ChatScreen(chatData: args ?? {}));
       case chatList:
         return MaterialPageRoute(builder: (_) => const ChatListScreen());
       case notifications:
@@ -66,8 +70,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const WishlistScreen());
       case meetupMap:
         return MaterialPageRoute(builder: (_) => const MeetupMapScreen());
+      case seedData:
+        return MaterialPageRoute(builder: (_) => const SeedDataScreen());
       default:
-        return MaterialPageRoute(builder: (_) => const Scaffold(body: Center(child: Text('Page not found'))));
+        return MaterialPageRoute(
+            builder: (_) =>
+                const Scaffold(body: Center(child: Text('Page not found'))));
     }
   }
 }

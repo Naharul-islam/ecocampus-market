@@ -48,6 +48,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  # লোগো পরিবর্তনের জন্য এই প্যাকেজটি যুক্ত করা হয়েছে
+  flutter_launcher_icons: ^0.13.1
+
+# লোগো কনফিগারেশন
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/images/app_logo.png" # নিশ্চিত করুন আপনার লোগোটি এই পাথে আছে
+  adaptive_icon_background: "#4CAF50" # লোগোর ব্যাকগ্রাউন্ড কালার (ঐচ্ছিক)
+  adaptive_icon_foreground: "assets/images/app_logo.png"
 
 flutter:
   uses-material-design: true
