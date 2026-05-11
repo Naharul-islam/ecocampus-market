@@ -11,6 +11,7 @@ import '../../features/chat/chat_list_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
 import '../../features/search/search_screen.dart';
 import '../../features/profile/profile_screen.dart';
+import '../../features/profile/settings_screen.dart';
 import '../../features/eco/leaderboard_screen.dart';
 import '../../features/wishlist/wishlist_screen.dart';
 import '../../features/map/meetup_map_screen.dart';
@@ -29,13 +30,14 @@ class AppRouter {
   static const notifications = '/notifications';
   static const search = '/search';
   static const profile = '/profile';
+  static const settings = '/settings'; // ✅ নতুন যোগ হয়েছে
   static const leaderboard = '/leaderboard';
   static const wishlist = '/wishlist';
   static const meetupMap = '/meetup-map';
   static const seedData = '/seed-data';
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
+  static Route<dynamic> generateRoute(RouteSettings routeSettings) {
+    switch (routeSettings.name) {
       case splash:
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       case login:
@@ -47,13 +49,13 @@ class AppRouter {
       case addProduct:
         return MaterialPageRoute(builder: (_) => const AddProductScreen());
       case productDetail:
-        final args = settings.arguments as Map<String, dynamic>?;
+        final args = routeSettings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
             builder: (_) => ProductDetailScreen(productData: args ?? {}));
       case myListings:
         return MaterialPageRoute(builder: (_) => const MyListingsScreen());
       case chat:
-        final args = settings.arguments as Map<String, dynamic>?;
+        final args = routeSettings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
             builder: (_) => ChatScreen(chatData: args ?? {}));
       case chatList:
@@ -64,6 +66,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SearchScreen());
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      case settings: // ✅ নতুন যোগ হয়েছে
+        return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case leaderboard:
         return MaterialPageRoute(builder: (_) => const LeaderboardScreen());
       case wishlist:
@@ -74,8 +78,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SeedDataScreen());
       default:
         return MaterialPageRoute(
-            builder: (_) =>
-                const Scaffold(body: Center(child: Text('Page not found'))));
+            builder: (_) => const Scaffold(
+                body: Center(child: Text('Page not found'))));
     }
   }
 }

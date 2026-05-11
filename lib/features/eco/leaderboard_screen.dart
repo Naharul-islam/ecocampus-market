@@ -64,7 +64,7 @@ class LeaderboardScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
                     border: rank <= 3
-                        ? Border.all(color: AppColors.accent.withOpacity(0.4))
+                        ? Border.all(color: AppColors.accent.withValues(alpha: 0.4))
                         : null,
                   ),
                   child: Row(children: [

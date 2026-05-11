@@ -112,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10)],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10)],
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -132,7 +132,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isSelected ? color.withOpacity(0.15) : Colors.white,
+                        color: isSelected ? color.withValues(alpha: 0.15) : Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: isSelected ? color : AppColors.divider),
                       ),
@@ -348,7 +348,7 @@ class _SearchScreenState extends State<SearchScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 8, offset: const Offset(0, 2))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipRRect(
@@ -363,7 +363,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               Positioned(top: 6, left: 6, child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(color: (typeColors[type] ?? Colors.blue).withOpacity(0.9), borderRadius: BorderRadius.circular(6)),
+                decoration: BoxDecoration(color: (typeColors[type] ?? Colors.blue).withValues(alpha: 0.9), borderRadius: BorderRadius.circular(6)),
                 child: Text(type, style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
               )),
             ]),

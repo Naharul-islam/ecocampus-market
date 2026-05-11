@@ -17,7 +17,8 @@ class NotificationsScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => _markAllRead(user?.uid ?? ''),
-            child: const Text('Mark all read', style: TextStyle(color: Colors.white, fontSize: 12)),
+            child: const Text('Mark all read',
+                style: TextStyle(color: Colors.white, fontSize: 12)),
           ),
         ],
       ),
@@ -30,29 +31,37 @@ class NotificationsScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primary));
+            return const Center(
+                child: CircularProgressIndicator(color: AppColors.primary));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return _buildEmptyState(context, user?.uid ?? '');
           }
           final notifications = snapshot.data!.docs;
-          final unread = notifications.where((d) => (d.data() as Map)['is_read'] == false).length;
+          final unread = notifications
+              .where((d) => (d.data() as Map)['is_read'] == false)
+              .length;
           return Column(children: [
             if (unread > 0)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 10),
                 color: AppColors.ecoGreen,
                 child: Text(
                   'You have $unread unread notification${unread > 1 ? 's' : ''}',
-                  style: const TextStyle(color: AppColors.primaryDark, fontSize: 13, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             Expanded(
               child: ListView.builder(
                 itemCount: notifications.length,
                 itemBuilder: (context, i) {
-                  final data = notifications[i].data() as Map<String, dynamic>;
+                  final data =
+                      notifications[i].data() as Map<String, dynamic>;
                   final docId = notifications[i].id;
                   return _notificationTile(context, data, docId);
                 },
@@ -65,32 +74,41 @@ class NotificationsScreen extends StatelessWidget {
         onPressed: () => _addSampleNotification(user?.uid ?? ''),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add_alert_outlined, color: Colors.white),
-        label: const Text('Test Notify', style: TextStyle(color: Colors.white)),
+        label: const Text('Test Notify',
+            style: TextStyle(color: Colors.white)),
       ),
     );
   }
 
   Widget _buildEmptyState(BuildContext context, String userId) {
     return Center(
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text('🔔', style: TextStyle(fontSize: 64)),
-        const SizedBox(height: 16),
-        const Text('No notifications yet',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-        const SizedBox(height: 8),
-        const Text('You\'ll see alerts for messages,\noffers, and eco achievements here!',
-            style: TextStyle(color: AppColors.textSecondary), textAlign: TextAlign.center),
-        const SizedBox(height: 24),
-        ElevatedButton.icon(
-          onPressed: () => _addSampleNotification(userId),
-          icon: const Icon(Icons.add_alert_outlined),
-          label: const Text('Add Test Notification'),
-        ),
-      ]),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('🔔', style: TextStyle(fontSize: 64)),
+            const SizedBox(height: 16),
+            const Text('No notifications yet',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary)),
+            const SizedBox(height: 8),
+            const Text(
+                'You\'ll see alerts for messages,\noffers, and eco achievements here!',
+                style: TextStyle(color: AppColors.textSecondary),
+                textAlign: TextAlign.center),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () => _addSampleNotification(userId),
+              icon: const Icon(Icons.add_alert_outlined),
+              label: const Text('Add Test Notification'),
+            ),
+          ]),
     );
   }
 
-  Widget _notificationTile(BuildContext context, Map<String, dynamic> data, String docId) {
+  Widget _notificationTile(
+      BuildContext context, Map<String, dynamic> data, String docId) {
     final isRead = data['is_read'] ?? false;
     final type = data['type'] ?? 'general';
     final title = data['title'] ?? 'Notification';
@@ -104,9 +122,13 @@ class NotificationsScreen extends StatelessWidget {
       final diff = now.difference(dt);
       if (diff.inMinutes < 1) {
         timeStr = 'Just now';
-      } else if (diff.inHours < 1) timeStr = '${diff.inMinutes}m ago';
-      else if (diff.inDays < 1) timeStr = '${diff.inHours}h ago';
-      else timeStr = '${diff.inDays}d ago';
+      } else if (diff.inHours < 1) {
+        timeStr = '${diff.inMinutes}m ago';
+      } else if (diff.inDays < 1) {
+        timeStr = '${diff.inHours}h ago';
+      } else {
+        timeStr = '${diff.inDays}d ago';
+      }
     }
 
     final typeConfig = _getTypeConfig(type);
@@ -118,63 +140,109 @@ class NotificationsScreen extends StatelessWidget {
         color: Colors.red,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 28),
+        child: const Icon(Icons.delete_outline,
+            color: Colors.white, size: 28),
       ),
-      onDismissed: (_) => FirebaseFirestore.instance.collection('notifications').doc(docId).delete(),
+      onDismissed: (_) => FirebaseFirestore.instance
+          .collection('notifications')
+          .doc(docId)
+          .delete(),
       child: InkWell(
         onTap: () {
-          FirebaseFirestore.instance.collection('notifications').doc(docId).update({'is_read': true});
+          FirebaseFirestore.instance
+              .collection('notifications')
+              .doc(docId)
+              .update({'is_read': true});
           _handleNotificationTap(context, data);
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: isRead ? Colors.white : AppColors.ecoGreen.withOpacity(0.4),
-            border: const Border(bottom: BorderSide(color: AppColors.divider, width: 0.5)),
+            // ✅ withOpacity → withValues fix
+            color: isRead
+                ? Colors.white
+                : AppColors.ecoGreen.withValues(alpha: 0.4),
+            border: const Border(
+                bottom:
+                    BorderSide(color: AppColors.divider, width: 0.5)),
           ),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              width: 46, height: 46,
-              decoration: BoxDecoration(
-                color: (typeConfig['color'] as Color).withOpacity(0.12),
-                shape: BoxShape.circle,
-              ),
-              child: Center(child: Text(typeConfig['emoji'] as String, style: const TextStyle(fontSize: 22))),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Expanded(
-                    child: Text(title,
-                        style: TextStyle(fontSize: 14, fontWeight: isRead ? FontWeight.normal : FontWeight.bold, color: AppColors.textPrimary),
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
-                  ),
-                  Text(timeStr, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                ]),
-                const SizedBox(height: 4),
-                Text(body,
-                    style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
-                    maxLines: 2, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 6),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  width: 46,
+                  height: 46,
                   decoration: BoxDecoration(
-                    color: (typeConfig['color'] as Color).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
+                    // ✅ withOpacity → withValues fix
+                    color: (typeConfig['color'] as Color)
+                        .withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
                   ),
-                  child: Text(typeConfig['label'] as String,
-                      style: TextStyle(fontSize: 10, color: typeConfig['color'] as Color, fontWeight: FontWeight.w600)),
+                  child: Center(
+                      child: Text(typeConfig['emoji'] as String,
+                          style: const TextStyle(fontSize: 22))),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(title,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: isRead
+                                            ? FontWeight.normal
+                                            : FontWeight.bold,
+                                        color: AppColors.textPrimary),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                              Text(timeStr,
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color: AppColors.textSecondary)),
+                            ]),
+                        const SizedBox(height: 4),
+                        Text(body,
+                            style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.textSecondary),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis),
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            // ✅ withOpacity → withValues fix
+                            color: (typeConfig['color'] as Color)
+                                .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(typeConfig['label'] as String,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: typeConfig['color'] as Color,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                      ]),
+                ),
+                if (!isRead)
+                  Container(
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.only(left: 8, top: 4),
+                    decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle),
+                  ),
               ]),
-            ),
-            if (!isRead)
-              Container(
-                width: 8, height: 8,
-                margin: const EdgeInsets.only(left: 8, top: 4),
-                decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
-              ),
-          ]),
         ),
       ),
     );
@@ -182,21 +250,47 @@ class NotificationsScreen extends StatelessWidget {
 
   Map<String, dynamic> _getTypeConfig(String type) {
     switch (type) {
-      case 'message': return {'emoji': '💬', 'color': Colors.blue, 'label': 'Message'};
-      case 'offer': return {'emoji': '💰', 'color': Colors.orange, 'label': 'Offer'};
-      case 'eco': return {'emoji': '🌱', 'color': AppColors.primary, 'label': 'Eco Achievement'};
-      case 'badge': return {'emoji': '🏆', 'color': Colors.amber, 'label': 'Badge Earned'};
-      case 'sold': return {'emoji': '✅', 'color': Colors.green, 'label': 'Item Sold'};
-      case 'system': return {'emoji': '📢', 'color': Colors.purple, 'label': 'System'};
-      default: return {'emoji': '🔔', 'color': AppColors.primary, 'label': 'General'};
+      case 'message': {
+        return {'emoji': '💬', 'color': Colors.blue, 'label': 'Message'};
+      }
+      case 'offer': {
+        return {'emoji': '💰', 'color': Colors.orange, 'label': 'Offer'};
+      }
+      case 'eco': {
+        return {'emoji': '🌱', 'color': AppColors.primary, 'label': 'Eco Achievement'};
+      }
+      case 'badge': {
+        return {'emoji': '🏆', 'color': Colors.amber, 'label': 'Badge Earned'};
+      }
+      case 'sold': {
+        return {'emoji': '✅', 'color': Colors.green, 'label': 'Item Sold'};
+      }
+      case 'system': {
+        return {'emoji': '📢', 'color': Colors.purple, 'label': 'System'};
+      }
+      default: {
+        return {'emoji': '🔔', 'color': AppColors.primary, 'label': 'General'};
+      }
     }
   }
 
-  void _handleNotificationTap(BuildContext context, Map<String, dynamic> data) {
+  void _handleNotificationTap(
+      BuildContext context, Map<String, dynamic> data) {
     switch (data['type'] ?? '') {
-      case 'message': Navigator.pushNamed(context, AppRouter.chatList); break;
-      case 'offer': case 'sold': Navigator.pushNamed(context, AppRouter.myListings); break;
-      case 'eco': case 'badge': Navigator.pushNamed(context, AppRouter.leaderboard); break;
+      case 'message': {
+        Navigator.pushNamed(context, AppRouter.chatList);
+        break;
+      }
+      case 'offer':
+      case 'sold': {
+        Navigator.pushNamed(context, AppRouter.myListings);
+        break;
+      }
+      case 'eco':
+      case 'badge': {
+        Navigator.pushNamed(context, AppRouter.leaderboard);
+        break;
+      }
     }
   }
 
@@ -216,11 +310,31 @@ class NotificationsScreen extends StatelessWidget {
   Future<void> _addSampleNotification(String userId) async {
     if (userId.isEmpty) return;
     final samples = [
-      {'type': 'message', 'title': 'New message from Rahim', 'body': 'Is the laptop still available?'},
-      {'type': 'eco', 'title': '🌱 Eco Milestone!', 'body': 'You\'ve saved 10kg of CO₂! Keep it up!'},
-      {'type': 'offer', 'title': 'New offer on your listing', 'body': 'Someone made an offer on your item'},
-      {'type': 'badge', 'title': '🏆 Badge Earned!', 'body': 'You earned the "Green Hero" badge!'},
-      {'type': 'sold', 'title': 'Item Sold!', 'body': 'Your listing has been marked as sold'},
+      {
+        'type': 'message',
+        'title': 'New message from Rahim',
+        'body': 'Is the laptop still available?'
+      },
+      {
+        'type': 'eco',
+        'title': '🌱 Eco Milestone!',
+        'body': 'You\'ve saved 10kg of CO₂! Keep it up!'
+      },
+      {
+        'type': 'offer',
+        'title': 'New offer on your listing',
+        'body': 'Someone made an offer on your item'
+      },
+      {
+        'type': 'badge',
+        'title': '🏆 Badge Earned!',
+        'body': 'You earned the "Green Hero" badge!'
+      },
+      {
+        'type': 'sold',
+        'title': 'Item Sold!',
+        'body': 'Your listing has been marked as sold'
+      },
     ];
     final sample = samples[DateTime.now().second % samples.length];
     await FirebaseFirestore.instance.collection('notifications').add({
